@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>botlynx- Your Smart AI Companion</title>
+    <meta name="description" content="Botlynx is an advanced AI assistant that helps you with tasks, information, and creative projects.">
+    <meta name="keywords" content="AI assistant, chatbot, virtual assistant, AI companion">
+    
+    <style>
+        /* CSS Variables based on the provided roots */
+        :root {
+            --primary-color: #6d28d9;
+            --primary-hover: #7c3aed;
+            --text-color: #1e293b;
+            --text-light: #64748b;
+            --bg-color: #ffffff;
+            --sidebar-bg: #f8fafc;
+            --chat-bg: #ffffff;
+            --message-user-bg: #6d28d9;
+            --message-bot-bg: #f1f5f9;
+            --input-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+        }
+
+        .dark-theme {
+            --primary-color: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --text-color: #f8fafc;
+            --text-light: #94a3b8;
+            --bg-color: #0f172a;
+            --sidebar-bg: #1e293b;
+            --chat-bg: #0f172a;
+            --message-user-bg: #7c3aed;
+            --message-bot-bg: #1e293b;
+            --input-bg: #1e293b;
+            --border-color: #334155;
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* App Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .tagline {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+            overflow-y: auto;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            margin: 0.25rem 0;
+            color: var(--text-light);
+            transition: all 0.2s;
+        }
+
+        .nav-link i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+            background-color: rgba(109, 40, 217, 0.1);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            background-color: rgba(109, 40, 217, 0.1);
+            border-right: 3px solid var(--primary-color);
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border-radius: var(--radius-sm);
+            background-color: var(--input-bg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .new-chat-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .new-chat-btn i {
+            margin-right: 0.5rem;
+        }
+
+        .new-chat-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Chat Section */
+        .chat-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--chat-bg);
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .chat-actions button {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .chat-actions button:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--primary-color);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 1.5rem;
+            max-width: 80%;
+        }
+
+        .message.user {
+            margin-left: auto;
+            flex-direction: row-reverse;
+        }
+
+        .message.bot {
+            margin-right: auto;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            margin-right: 0;
+            margin-left: 1rem;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .message-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message.user .message-content {
+            text-align: right;
+        }
+
+        .message-content p {
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 0.5rem;
+            font-size: 0.9375rem;
+        }
+
+        .message.bot .message-content p {
+            background-color: var(--message-bot-bg);
+            border-top-left-radius: 0;
+        }
+
+        .message.user .message-content p {
+            background-color: var(--message-user-bg);
+            color: white;
+            border-top-right-radius: 0;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .chat-input-container {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .chat-form {
+            margin-bottom: 0.5rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            padding-right: 80px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 0.9375rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        #user-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.2);
+        }
+
+        .input-actions {
+            position: absolute;
+            right: 0.5rem;
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .voice-btn, .send-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background-color: transparent;
+            color: var(--text-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .voice-btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .send-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .input-hint {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        /* Other Sections */
+        .section {
+            padding: 2rem;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .section h3 {
+            font-size: 1.25rem;
+            margin: 1.5rem 0 1rem;
+        }
+
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            background-color: var(--sidebar-bg);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            
+            .sidebar-nav {
+                display: flex;
+                overflow-x: auto;
+                padding: 0.5rem;
+            }
+            
+            .nav-link {
+                flex-direction: column;
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+            
+            .nav-link i {
+                margin-right: 0;
+                margin-bottom: 0.25rem;
+            }
+            
+            .nav-link span {
+                white-space: nowrap;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="hamad-log.png">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="logo">BOTLYNX</h1>
+                <p class="tagline">Your Smart AI Companion</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#chat-section" class="nav-link active" data-section="chat-section">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Chat</span>
+                </a>
+                <a href="#features" class="nav-link" data-section="features">
+                    <i class="fas fa-star"></i>
+                    <span>Features</span>
+                </a>
+                <a href="#about" class="nav-link" data-section="about">
+                    <i class="fas fa-info-circle"></i>
+                    <span>About</span>
+                </a>
+                <a href="#technology" class="nav-link" data-section="technology">
+                    <i class="fas fa-microchip"></i>
+                    <span>Technology</span>
+                </a>
+                <a href="#use-cases" class="nav-link" data-section="use-cases">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Use Cases</span>
+                </a>
+                <a href="#faq" class="nav-link" data-section="faq">
+                    <i class="fas fa-question-circle"></i>
+                    <span>FAQ</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                    <span>Dark Mode</span>
+                    <label class="switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <button class="new-chat-btn" id="new-chat-btn">
+                    <i class="fas fa-plus"></i>
+                    <span>New Chat</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Chat Section -->
+            <section class="section active" id="chat-section">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <h2>Chat with Botlynx</h2>
+                        <div class="chat-actions">
+                            <button class="clear-chat" id="clear-chat"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message bot">
+                            <div class="message-avatar">
+                                <img src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png" alt="BotLynx Avatar" width="40" height="40">
+                            </div>
+                            <div class="message-content">
+                                <p>👋 Hello! I'm Botlynx. How can I help you today?</p>
+                                <span class="message-time">Just now</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-container">
+                        <form id="chat-form" class="chat-form">
+                            <div class="input-wrapper">
+                                <input type="text" id="user-input" placeholder="Type your message here..." autocomplete="off" />
+                                <div class="input-actions">
+                                    <button type="button" class="voice-btn" aria-label="Voice input">
+                                        <i class="fas fa-microphone"></i>
+                                    </button>
+                                    <button type="submit" class="send-btn" aria-label="Send message">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <p class="input-hint">Botlynx may produce inaccurate information. Consider verifying important details.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Features Section -->
+            <section class="section" id="features">
+                <h2>Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>Natural Conversations</h3>
+                        <p>Engage in human-like dialogue with our advanced natural language processing capabilities.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Context Awareness</h3>
+                        <p>Botlynx remembers conversation context for more meaningful and coherent interactions.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <h3>Task Automation</h3>
+                        <p>Automate repetitive tasks and streamline your workflow with intelligent assistance.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3>Creative Generation</h3>
+                        <p>Generate ideas, stories, poems, and more with our creative AI capabilities.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>Learning Assistant</h3>
+                        <p>Get explanations, summaries, and learning resources on countless topics.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-language"></i>
+                        </div>
+                        <h3>Multilingual Support</h3>
+                        <p>Communicate in multiple languages with accurate translation capabilities.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- About Section -->
+            <section class="section" id="about">
+                <h2>About Botlynx</h2>
+                <p>Botlynx is an advanced AI assistant designed to make your life easier, more productive, and more creative. Our mission is to provide intelligent, ethical, and helpful AI interactions that enhance human capabilities.</p>
+                
+                <h3>Our Vision</h3>
+                <p>We believe AI should be accessible, understandable, and beneficial to everyone. Botlynx represents the next generation of AI assistants that work with you, not for you.</p>
+                
+                <h3>Ethical AI</h3>
+                <p>We're committed to responsible AI development with built-in safeguards for privacy, accuracy, and ethical considerations.</p>
+            </section>
+            
+            <!-- Technology Section -->
+            <section class="section" id="technology">
+                <h2>Technology</h2>
+                <p>Botlynx is powered by cutting-edge artificial intelligence technologies:</p>
+                
+                <h3>Large Language Models</h3>
+                <p>Our system leverages state-of-the-art transformer-based models trained on diverse datasets for comprehensive understanding.</p>
+                
+                <h3>Machine Learning</h3>
+                <p>Continuous learning algorithms allow Botlynx to improve its responses and adapt to your preferences over time.</p>
+                
+                <h3>Natural Language Processing</h3>
+                <p>Advanced NLP techniques enable human-like comprehension and generation of text in multiple languages.</p>
+                
+                <h3>Knowledge Integration</h3>
+                <p>Botlynx combines its language capabilities with curated knowledge sources for accurate information.</p>
+            </section>
+            
+            <!-- Use Cases Section -->
+            <section class="section" id="use-cases">
+                <h2>Use Cases</h2>
+                
+                <h3>Personal Productivity</h3>
+                <ul>
+                    <li>Email drafting and summarization</li>
+                    <li>Schedule management and reminders</li>
+                    <li>Quick information lookup</li>
+                    <li>Decision making assistance</li>
+                </ul>
+                
+                <h3>Education & Learning</h3>
+                <ul>
+                    <li>Homework help and explanations</li>
+                    <li>Language learning practice</li>
+                    <li>Research assistance</li>
+                    <li>Concept clarification</li>
+                </ul>
+                
+                <h3>Creative Work</h3>
+                <ul>
+                    <li>Content ideation and drafting</li>
+                    <li>Story and poetry generation</li>
+                    <li>Brainstorming partner</li>
+                    <li>Creative writing feedback</li>
+                </ul>
+                
+                <h3>Professional Use</h3>
+                <ul>
+                    <li>Code generation and explanation</li>
+                    <li>Report and document drafting</li>
+                    <li>Meeting summarization</li>
+                    <li>Business communication assistance</li>
+                </ul>
+            </section>
+            
+            <!-- FAQ Section -->
+            <section class="section" id="faq">
+                <h2>Frequently Asked Questions</h2>
+                
+                <h3>Is Botlynx free to use?</h3>
+                <p>Yes, Botlynx is currently free to use for all basic features. We may introduce premium features in the future.</p>
+                
+                <h3>How does Botlynx protect my privacy?</h3>
+                <p>We prioritize your privacy. Conversations are encrypted, and we don't store personal data longer than necessary.</p>
+                
+                <h3>Can I trust the information Botlynx provides?</h3>
+                <p>While we strive for accuracy, Botlynx may occasionally provide incorrect information. Always verify critical facts.</p>
+                
+                <h3>How can I provide feedback?</h3>
+                <p>We welcome feedback! Use the "Feedback" option in the menu or contact our support team.</p>
+                
+                <h3>What makes Botlynx different from other AI assistants?</h3>
+                <p>Botlynx focuses on natural, context-aware conversations with strong ethical foundations and user control.</p>
+            </section>
+        </main>
+    </div>
+
+    
+    <script src="script.js"></script>
+</body>
+</html>
